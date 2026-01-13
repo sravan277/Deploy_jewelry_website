@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback,useEffect } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import { FiUpload, FiImage, FiDownload, FiZoomIn, FiStar, FiClock } from 'react-icons/fi';
 import { useDropzone } from 'react-dropzone';
@@ -17,6 +17,29 @@ const Generate: React.FC = () => {
   const mouseY = useMotionValue(0);
   const [isSaving, setIsSaving] = useState(false);
   const apiUrl = process.env.REACT_APP_API_URL;
+
+  
+  // --- ALTERNATING TEXT LOGIC ---
+  const [messageIndex, setMessageIndex] = useState(0);
+  const loadingMessages = [
+    "Analyzing your sketch...",
+    "Polishing the metal details...",
+    "Setting the gemstones...",
+    "Finalizing your masterpiece..."
+  ];
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isGenerating) {
+      setMessageIndex(0); // Reset to first message
+      interval = setInterval(() => {
+        setMessageIndex((prev) => (prev + 1) % loadingMessages.length);
+      }, 3000);
+    }
+    return () => clearInterval(interval);
+  }, [isGenerating]);
+
+  
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -434,6 +457,54 @@ const Generate: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+
+      {/* --- TOP RIGHT ALTERNATING TEXT TOAST --- */}
+      <AnimatePresence>
+        {isGenerating && (
+          <motion.div
+            initial={{ opacity: 0, x: 50, y: 0 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            exit={{ opacity: 0, x: 50 }}
+            className="fixed top-24 right-6 z-[100] w-72 bg-white/95 backdrop-blur-md border border-purple-100 shadow-xl rounded-2xl p-5"
+          >
+            <div className="flex items-center space-x-4">
+              {/* Spinning Loader Icon */}
+              <div className="relative flex-shrink-0">
+                <motion.div 
+                  animate={{ rotate: 360 }}
+                  transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
+                  className="w-6 h-6 border-2 border-purple-600 border-t-transparent rounded-full" 
+                />
+              </div>
+
+              <div className="flex-1">
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
+                  AI is Designing
+                </p>
+                
+                {/* Text Transition Area */}
+                <div className="h-5 overflow-hidden"> 
+                  <AnimatePresence mode="wait">
+                    <motion.p
+                      key={messageIndex}
+                      initial={{ y: 10, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: -10, opacity: 0 }}
+                      transition={{ duration: 0.4 }}
+                      className="text-sm text-gray-800 font-medium"
+                    >
+                      {loadingMessages[messageIndex]}
+                    </motion.p>
+                  </AnimatePresence>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      
     </motion.div>
   );
 };
