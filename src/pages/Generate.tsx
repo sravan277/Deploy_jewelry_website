@@ -112,6 +112,7 @@ const Generate: React.FC = () => {
       const blob = await response.blob();
       const generatedImageUrl = URL.createObjectURL(blob);
       setGeneratedImage(generatedImageUrl);
+      setIsGenerating(false); // Stop toast here!
 
       await saveDesign(image, blob);
 
@@ -462,28 +463,29 @@ const Generate: React.FC = () => {
       {/* --- TOP RIGHT ALTERNATING TEXT TOAST --- */}
       <AnimatePresence>
         {isGenerating && (
-          <motion.div
-            initial={{ opacity: 0, x: 50, y: 0 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
+         <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 50 }}
-            className="fixed top-24 right-6 z-[100] w-72 bg-white/95 backdrop-blur-md border border-purple-100 shadow-xl rounded-2xl p-5"
+            /* CHANGED COLORS BELOW: bg-amber-50, border-amber-200, shadow-amber-900/10 */
+            className="fixed top-24 right-6 z-[100] w-72 bg-amber-50/95 backdrop-blur-md border border-amber-200 shadow-xl shadow-amber-900/10 rounded-2xl p-5"
           >
             <div className="flex items-center space-x-4">
-              {/* Spinning Loader Icon */}
               <div className="relative flex-shrink-0">
                 <motion.div 
                   animate={{ rotate: 360 }}
                   transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
-                  className="w-6 h-6 border-2 border-purple-600 border-t-transparent rounded-full" 
+                  /* CHANGED LOADER COLOR: border-amber-600 */
+                  className="w-6 h-6 border-2 border-amber-600 border-t-transparent rounded-full" 
                 />
               </div>
-
+          
               <div className="flex-1">
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
+                {/* CHANGED TEXT COLOR: text-amber-600 */}
+                <p className="text-xs font-bold text-amber-600 uppercase tracking-wider mb-1">
                   AI is Designing
                 </p>
                 
-                {/* Text Transition Area */}
                 <div className="h-5 overflow-hidden"> 
                   <AnimatePresence mode="wait">
                     <motion.p
@@ -491,8 +493,7 @@ const Generate: React.FC = () => {
                       initial={{ y: 10, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
                       exit={{ y: -10, opacity: 0 }}
-                      transition={{ duration: 0.4 }}
-                      className="text-sm text-gray-800 font-medium"
+                      className="text-sm text-amber-900 font-medium"
                     >
                       {loadingMessages[messageIndex]}
                     </motion.p>
