@@ -283,7 +283,7 @@ const Generate: React.FC = () => {
                       <img
                         src={imagePreview}
                         alt="Uploaded sketch"
-                        className="rounded-xl w-full object-cover shadow-lg cursor-pointer transition-transform group-hover:scale-[1.02]"
+                        className="rounded-xl w-full max-h-64 object-contain shadow-lg cursor-pointer transition-transform group-hover:scale-[1.02] bg-gray-50"
                         onClick={() => setShowLightbox(true)}
                       />
                       <motion.div 
