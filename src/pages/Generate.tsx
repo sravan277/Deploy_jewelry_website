@@ -16,6 +16,7 @@ const Generate: React.FC = () => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const [isSaving, setIsSaving] = useState(false);
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -58,7 +59,7 @@ const Generate: React.FC = () => {
         throw new Error('Please log in to generate designs');
       }
 
-      const endpoint = 'http://localhost:5000/api/generate';
+      const endpoint = `${apiUrl}/api/generate`;
       
       console.log('Sending request to Node.js server at:', endpoint);
 
@@ -115,7 +116,7 @@ const Generate: React.FC = () => {
     formData.append('category', 'other');
 
     try {
-      const response = await fetch('http://localhost:5000/api/designs', {
+      const response = await fetch(`${apiUrl}/api/designs`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

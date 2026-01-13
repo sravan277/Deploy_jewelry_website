@@ -35,10 +35,10 @@ const forwardToMlService = async (req, res) => {
     });
     form.append('description', description);
 
-    console.log('Forwarding to Flask at http://localhost:4000/api/generate');
+    console.log(`Forwarding to Flask at ${process.env.ML_SERVICE_URL}/api/generate`);
 
     // Call the Python Flask server
-    const flaskResponse = await axios.post('http://localhost:4000/api/generate', form, {
+    const flaskResponse = await axios.post(`${process.env.ML_SERVICE_URL}/api/generate`, form, {
       headers: {
         ...form.getHeaders(),
       },

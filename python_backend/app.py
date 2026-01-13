@@ -15,9 +15,16 @@ load_dotenv()
 # Initialize Flask app
 app = Flask(__name__)
 
-# Configure CORS to allow requests from Node.js backend
-CORS(app, resources={r"/api/*": {"origins": "http://localhost:5000"}})
+# Get the URL, default to None
+NODE_API = os.getenv('NODE_API_URL')
 
+# Create a list of allowed origins
+origins = ["http://localhost:5000"]
+if NODE_API:
+    origins.append(NODE_API)
+
+# Configure CORS
+CORS(app, resources={r"/api/*": {"origins": origins}})
 # Get API token
 REPLICATE_API_TOKEN = os.getenv('REPLICATE_API_TOKEN')
 

@@ -20,6 +20,7 @@ const Dashboard: React.FC = () => {
   // const { user } = useAuth();
   const [images, setImages] = useState<ImageRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const apiUrl = process.env.REACT_APP_API_URL;
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<ImageRecord | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
@@ -37,7 +38,7 @@ const Dashboard: React.FC = () => {
   
     try {
       // Remove the email query parameter, it's not needed.
-      const response = await fetch('http://localhost:5000/api/designs/my-designs', {
+      const response = await fetch(`${apiUrl}/api/designs/my-designs`, {
         headers: { // Add the Authorization header
           'Authorization': `Bearer ${token}`
         }
@@ -64,7 +65,7 @@ const Dashboard: React.FC = () => {
   
     try {
       // Remove the email query parameter here too
-      const response = await fetch(`http://localhost:5000/api/designs/${imageId}`, {
+      const response = await fetch(`${apiUrl}/api/designs/${imageId}`, {
         method: 'DELETE',
         headers: { // Add the Authorization header
           'Authorization': `Bearer ${token}`
